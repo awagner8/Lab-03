@@ -8,20 +8,33 @@ void hexBin (char *src, char *dst, size_t max);
 
 void binHex(char src[], char dst[], size_t max)
 {
-    size_t i = 0;
-    int j = 0;
-    while (src[i] != '\0' && src[i] != '\n') {
-        char temp[] = {src[i], src[i + 1], src[i + 2], src[i + 3], '\0'};
-        int decimal = strtol(temp, NULL, 2);
-        if (decimal >= 10 && decimal <= 15) {
-            sprintf(dst + j, "%x", decimal); // lowercase hexadecimal format
-        } else {
-            sprintf(dst + j, "%X", decimal); // uppercase hexadecimal format
+    int len = strlen(src);
+    int hexIndex = 0;
+
+    //Padding if binary number is not multiple of 4
+    int padding = len % 4;
+    if (padding != 0) {
+        padding = 4 - padding;
+        for (int i = 0; i < padding; i++) {
+            src[len + i] = '0';
         }
-        i += 4;
-        j++;
+        len += padding;
     }
-    dst[j] = '\0';
+
+    for (int i = 0; i < len; i += 4) {
+        int num = 0;
+        for (int j = 0; j < 4; j++) {
+            num = num * 2 + (src[i + j] - '0');
+        }
+        if (num <= 9) {
+            dst[hexIndex++] = num + '0';
+        } else {
+            dst[hexIndex++] = num - 10 + 'a';
+        }
+    }
+
+    // Adding null character at the end
+    dst[hexIndex] = '\0';
 }
 
     
